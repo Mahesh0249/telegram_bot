@@ -14,16 +14,20 @@ from googleapiclient.discovery import build
 import google.generativeai as genai
 import pickle
 import re
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Load the Whisper model once
 model = whisper.load_model("base")
 
 # Email configuration
-EMAIL_ADDRESS = "mahesh27205@gmail.com"
-EMAIL_PASSWORD = "nmhx tekd oycu jsvj"
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 # Gemini API configuration
-GEMINI_API_KEY = "AIzaSyCcH4S1fRfpnjMLmJT5hxU5CBSyJT3R2E8"  # Replace with your Gemini API key
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Google Calendar API setup
@@ -235,7 +239,7 @@ async def list_models(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Error listing models: {str(e)}")
 
 def main():
-    TOKEN = '7962661227:AAEK3Vtv8nj1lEuh1t0laLZnFsOp5tGup0E'
+    TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("email", email_handler))
