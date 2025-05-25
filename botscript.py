@@ -19,6 +19,16 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Debug: Print environment variables
+print("Checking environment variables...")
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+if not TOKEN:
+    print("ERROR: TELEGRAM_BOT_TOKEN not found in environment variables!")
+    print("Current working directory:", os.getcwd())
+    print("Files in current directory:", os.listdir())
+else:
+    print("TELEGRAM_BOT_TOKEN found!")
+
 # Load the Whisper model once
 model = whisper.load_model("base")
 
@@ -239,7 +249,10 @@ async def list_models(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Error listing models: {str(e)}")
 
 def main():
-    TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+    if not TOKEN:
+        print("ERROR: No Telegram bot token found! Please check your .env file.")
+        return
+        
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("email", email_handler))
